@@ -13,6 +13,7 @@ def parse_proc_net_wireless(txt):
     data = lines[2:]
     for line in data:
         d = {}
+
         parts = line.split()
         it = parts[0].strip(":")
         d['link']  = clean(parts[2])
@@ -25,5 +26,6 @@ def parse_proc_net_wireless(txt):
         d['misc']  = clean(parts[9])
         d['missed_beacon'] = clean(parts[10])
 
+        d['interface'] = it
         parsed[it]=d
     return parsed

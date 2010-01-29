@@ -9,6 +9,7 @@ def test_proc_net_wireless():
     assert 'wl0' in parsed
     it = parsed['wl0']
     print it
+    assert it['interface']=='wl0'
     assert it['link'] == 4
     assert it['level'] == -63
     assert it['noise'] == -96
