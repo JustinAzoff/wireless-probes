@@ -19,3 +19,21 @@ def test_proc_net_wireless():
     assert it['retry'] == 20
     assert it['misc'] == 4
     assert it['missed_beacon'] == 9
+
+dl_out1 = "null                 100% |*******************************|  4096k 00:00:00 ETA\n" \
+          "real    0m 2.93s\n" \
+          "user    0m 0.06s\n" \
+          "sys     0m 2.36s\n"
+
+dl_out2 = "null                 100% |*******************************|  4096k 00:00:00 ETA\n" \
+          "real    1m 4.13s\n" \
+          "user    0m 0.06s\n" \
+          "sys     0m 2.36s\n"
+
+def test_parse_download():
+    parsed = parsers.parse_download(dl_out1)
+    assert parsed['time'] == 2.93
+
+def test_parse_download_minute():
+    parsed = parsers.parse_download(dl_out2)
+    assert parsed['time'] == 64.13
