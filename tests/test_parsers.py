@@ -1,11 +1,11 @@
-from wirelessprobe import proc
+from wirelessprobe import parsers
 
 out="Inter-| sta-|   Quality        |   Discarded packets               | Missed | WE\n" \
     " face | tus | link level noise |  nwid  crypt   frag  retry   misc | beacon | 18\n" \
     "   wl0: 0000    4.  193.  160.       1      2      3     20      4        9\n" \
 
 def test_proc_net_wireless():
-    parsed = proc.parse_proc_net_wireless(out)
+    parsed = parsers.parse_proc_net_wireless(out)
     assert 'wl0' in parsed
     it = parsed['wl0']
     print it
