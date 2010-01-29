@@ -39,4 +39,4 @@ ip route add default via $P2 table T2
 ip route add $P1_NET dev $IF1 src $IP1
 ip route add $P2_NET dev $IF2 src $IP2
 
-#ip route add default via $P1
+ip route add default via $P2
