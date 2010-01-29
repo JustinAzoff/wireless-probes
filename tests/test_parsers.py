@@ -33,7 +33,9 @@ dl_out2 = "null                 100% |*******************************|  4096k 00
 def test_parse_download():
     parsed = parsers.parse_download(dl_out1)
     assert parsed['time'] == 2.93
+    assert parsed['kilobytes'] == 4096
 
 def test_parse_download_minute():
     parsed = parsers.parse_download(dl_out2)
     assert parsed['time'] == 64.13
+    assert parsed['kilobytes'] == 4096

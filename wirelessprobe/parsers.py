@@ -29,10 +29,14 @@ def parse_proc_net_wireless(txt):
     return parsed
 
 def parse_download(txt):
-    lines = txt.splitlines()
+    lines = txt.split("\n")
+    progress = [l for l in lines if "null" in l][0]
+    size = [word for word in progress.split() if word.endswith("k")][-1]
+    kilobytes = int(size.strip("k"))
+
     real = [l for l in lines if l.startswith("real")][0]
     minutes, seconds = real[5:].split()
     minutes =   int(minutes.strip("m"))
     seconds = float(seconds.strip("s"))
     t = 60 * minutes + seconds
-    return {'time': t} 
+    return {'time': t, 'kilobytes': kilobytes}
