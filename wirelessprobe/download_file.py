@@ -58,6 +58,7 @@ def do_download(url, timeout):
 
     stats = make_stats(d.log)
     stats["timeout"] = hit_timeout
+    stats["ok"] = not hit_timeout
     stats["elapsed"] = elapsed
     return stats
 

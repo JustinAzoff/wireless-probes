@@ -12,30 +12,28 @@ def check_ssid(ssid):
     this_ssid = [ap for ap in access_points.values() if ap['ssid'] == ssid]
     stats = make_stats([x['signal'] for x in this_ssid])
     stats["aps"] = len(this_ssid)
+    stats["ok"] = len(this_ssid) >= 1
     return stats
 
 def check_ip(interface):
     try:
         ip = get_ip(interface)
-        return ip not in ("", "0.0.0.0")
+        ok = ip not in ("", "0.0.0.0")
+        return dict(ok=ok, ip=ip)
     except IOError:
-        return False
-
-def check_download(url, timeout):
-    stats = do_download(url, timeout)
-    return stats
+        return dict(ok=False, ip="")
     
 def check_wireless(ssid, interface=None):
     if not interface:
         interface = open("/etc/wireless_interface.conf").read().strip()
 
     ap_stats = check_ssid(ssid)
-    print "AP stats", ap_stats
+    print "AP stats ok=%(ok)s aps=%(aps)d min_signal=%(min)d avg_signal=%(avg)d max_signal=%(max)d" % ap_stats
 
-    print "IP address", check_ip(interface)
+    print "IP address ok=%(ok)s ip=%(ip)s" % check_ip(interface)
 
-    dl_stats = check_download("http://www.example.com/20m", 30)
-    print "DL stats", dl_stats
+    dl_stats = do_download("http://www.example.com/20m", 30)
+    print "DL stats ok=%(ok)s elapsed=%(elapsed).2f min_speed=%(min)d avg_speed=%(avg)d max_speed=%(max)d" % dl_stats
 
 
 def main():
