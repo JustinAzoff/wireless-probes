@@ -41,3 +41,24 @@ def parse_download(txt):
     seconds = float(seconds.strip("s"))
     t = 60 * minutes + seconds
     return {'time': t, 'kilobytes': kilobytes}
+
+def maybe_int(s):
+    try:
+        return int(s)
+    except ValueError:
+        return s
+
+def parse_scan_result(txt):
+    lines = txt.split("\n")
+    aps = {}
+    for line in lines:
+        if line.startswith("bssid"): continue
+
+        parts = line.split("\t")
+        parts = [maybe_int(s) for s in parts]
+        while len(parts)!= 5:
+            parts.append(None)
+            
+        bssid, frequency, signal, flags, ssid = parts
+        aps[bssid] = dict(bssid=bssid, frequency=frequency, signal=signal, flags=flags, ssid=ssid)
+    return aps

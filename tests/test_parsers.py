@@ -39,3 +39,29 @@ def test_parse_download_minute():
     parsed = parsers.parse_download(dl_out2)
     assert parsed['time'] == 64.13
     assert parsed['kilobytes'] == 4096
+
+
+scan_result_out = \
+"""bssid / frequency / signal level / flags / ssid
+00:1f:6d:b9:6c:42	2412	204	[WPA-EAP-TKIP][WPA2-EAP-TKIP+CCMP]	UA_WPA
+00:17:df:ab:1f:73	2462	204	[WPA-EAP-TKIP][WPA2-EAP-TKIP+CCMP]	
+00:17:df:ab:1f:71	2462	198	[WPA-EAP-TKIP][WPA2-EAP-TKIP+CCMP]	UA_WPA
+00:1f:6d:b9:85:12	2437	188	[WPA-EAP-TKIP][WPA2-EAP-TKIP+CCMP]	UA_WPA
+c4:7d:4f:88:4a:24	2437	180	[WPA2-PSK-CCMP] THOR
+00:1f:6d:b9:6c:45	2412	206		UAAthletics
+00:1f:6d:b9:6c:41	2412	204		
+00:1f:6d:b9:6c:46	2412	204		UAGuest
+00:1f:6d:b9:6c:47	2412	204		UAWirelessHelp
+00:17:df:ab:1f:72	2462	204		
+00:17:df:ab:1f:75	2462	198		UAAthletics
+00:17:df:ab:1f:70	2462	198		UAGuest
+00:1f:6d:b9:85:11	2437	190		
+00:1f:6d:b9:85:16	2437	188		UAGuest
+00:1f:6d:b9:85:17	2437	187		UAWirelessHelp
+00:1f:6d:b9:85:15	2437	187		UAAthletics
+"""
+
+def test_parse_scan_result():
+    parsed = parsers.parse_scan_result(scan_result_out)
+    assert parsed["00:1f:6d:b9:6c:42"]["signal"] == 204
+    assert parsed["00:1f:6d:b9:6c:42"]["ssid"] == "UA_WPA"
