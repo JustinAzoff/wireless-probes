@@ -8,6 +8,7 @@ setup(name="wirelessprobe",
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     entry_points = {
         'console_scripts': [
+        "wireless-check = wirelessprobe.check:main"
         ]
     },
     scripts=glob('scripts/*'),
