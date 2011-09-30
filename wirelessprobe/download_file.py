@@ -1,6 +1,10 @@
 import time
 import urllib, sys
 import signal
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class Timeout(Exception):
     pass
@@ -19,7 +23,7 @@ class FileDownloader:
         if now - self.last > 1:
             speed = self.blocks_seen * block_size
             pct = 100*blocks/(total_size/block_size)
-            print "pct=%d, speed=%d" % (pct, speed)
+            logger.debug("dowload progress pct=%d, speed=%d", pct, speed)
             self.log.append(speed)
             self.blocks_seen = 0
             self.last = now
@@ -29,7 +33,7 @@ class FileDownloader:
     def handle_timeout(self, signum, frame):
         raise Timeout()
 
-    def download(self, site, timeout=5):
+    def download(self, site, timeout):
         old = signal.signal(signal.SIGALRM, self.handle_timeout)
         signal.alarm(timeout)
 
@@ -42,20 +46,35 @@ class FileDownloader:
         signal.alarm(0)
         return end - start
 
+def do_download(url, timeout):
+    hit_timeout = False
+    elapsed = None
+    d = FileDownloader()
+    try :
+        elapsed = d.download(url, timeout)
+    except Timeout:
+        hit_timeout=True
+
+    stats = make_stats(d.log)
+    stats["timeout"] = hit_timeout
+    stats["elapsed"] = elapsed
+    return stats
+
 def avg(log):
     return sum(log) / len(log)
 
-def stats(log):
-    return min(log), max(log), avg(log)
+def make_stats(log):
+    if log:
+        return dict(min=min(log), max=max(log), avg=avg(log))
+    else:
+        return dict(min=None, max=None, avg=None)
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
     if len(sys.argv) !=2:
         print "Usage: download.py <url> "
         sys.exit(1)
 
     d = FileDownloader()
     site = sys.argv[1]
-    try :
-        print d.download(site)
-    finally:
-        print stats(d.log)
+    print do_download(site, 3)
