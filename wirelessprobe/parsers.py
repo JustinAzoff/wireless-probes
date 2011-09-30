@@ -52,7 +52,9 @@ def parse_scan_result(txt):
     lines = txt.split("\n")
     aps = {}
     for line in lines:
+        if not line.strip(): continue
         if line.startswith("bssid"): continue
+        if line.startswith("Selected interface"): continue
 
         parts = line.split("\t")
         parts = [maybe_int(s) for s in parts]
