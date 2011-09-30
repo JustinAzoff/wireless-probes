@@ -3,8 +3,9 @@ import urllib, sys
 import signal
 import logging
 
-logger = logging.getLogger(__name__)
+from wirelessprobe.util import make_stats
 
+logger = logging.getLogger(__name__)
 
 class Timeout(Exception):
     pass
@@ -59,15 +60,6 @@ def do_download(url, timeout):
     stats["timeout"] = hit_timeout
     stats["elapsed"] = elapsed
     return stats
-
-def avg(log):
-    return sum(log) / len(log)
-
-def make_stats(log):
-    if log:
-        return dict(min=min(log), max=max(log), avg=avg(log))
-    else:
-        return dict(min=None, max=None, avg=None)
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
