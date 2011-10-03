@@ -2,6 +2,7 @@ from wirelessprobe import get_ip
 from wirelessprobe import wpa_cli
 from wirelessprobe import do_download
 from wirelessprobe import ping
+from wirelessprobe.ping import PingError
 from wirelessprobe.util import make_stats
 
 import logging
@@ -39,11 +40,17 @@ check_ip.format = "IP address ok=%(ok)s ip=%(ip)s"
 
 
 def check_ping(ping_host, ping_count, **kwargs):
-    stats = ping(ping_host, ping_count)
+    try :
+        stats = ping(ping_host, ping_count)
+    except PingError:
+        return dict(ok=False, error=True)
+
     stats['ok'] = stats['loss'] < 4
     return stats
 
 check_ping.format = "PING stats ok=%(ok)s sent=%(sent)d received=%(received)d loss=%(loss)d min=%(min).2f avg=%(avg).2f max=%(max).2f"
+check_ping.alt_format = "PING stats ok=%(ok)s error=%(error)s"
+check_ping.alt_key = "error"
 
 
 def check_download(url, url_timeout, **kwargs):
@@ -51,20 +58,19 @@ def check_download(url, url_timeout, **kwargs):
     stats["ok"] = not stats['timeout'] and not stats['exception']
     return stats
 
+check_download.format = "DL stats ok=%(ok)s elapsed=%(elapsed).2f timeout=%(timeout)s min_speed=%(min)d avg_speed=%(avg)d max_speed=%(max)d"
+check_download.alt_format = "DL stats ok=%(ok)s exception='%(exception)s'"
+check_download.alt_key = "exception"
+
 
 def check_wireless(**config):
 
-    for func in check_ssid, check_wpa, check_ip, check_ping:
+    for func in check_ssid, check_wpa, check_ip, check_ping, check_download:
         stats = func(**config)
-        print func.format % stats
-
-
-    dl_stats = check_download(**config)
-    if dl_stats['exception']:
-        print "DL stats ok=%(ok)s exception='%(exception)s'" % dl_stats
-    else:
-        print "DL stats ok=%(ok)s elapsed=%(elapsed).2f timeout=%(timeout)s min_speed=%(min)d avg_speed=%(avg)d max_speed=%(max)d" % dl_stats
-
+        if getattr(func, 'alt_key', 'mooo') in stats:
+            print func.alt_format % stats
+        else:
+            print func.format % stats
 
 def main():
     import sys
