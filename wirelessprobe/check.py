@@ -36,7 +36,7 @@ def check_wireless(ssid, interface=None):
     print "AP stats ok=%(ok)s aps=%(aps)d min_signal=%(min)d avg_signal=%(avg)d max_signal=%(max)d" % ap_stats
 
     wpa_status = check_wpa(ssid, interface)
-    print "WPA stats ok=%(ok)s ip=%(ip_address)s" % wpa_status
+    print "WPA stats ok=%(ok)s wpa_state=%(wpa_state)s supplicant_state=%(Supplicant PAE state)s eap_state=%(EAP state)s" % wpa_status
 
     ip_stats = check_ip(interface)
     print "IP address ok=%(ok)s ip=%(ip)s" % ip_stats
