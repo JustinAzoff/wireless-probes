@@ -8,6 +8,7 @@ import IPy
 
 import datetime
 import logging
+import sys
 logger = logging.getLogger(__name__)
 
 def check_ssid(ssid, interface, **kwargs):
@@ -78,6 +79,7 @@ def check_wireless(**config):
             print now, func.alt_format % stats
         else:
             print now, func.format % stats
+        sys.stdout.flush()
 
 def main():
     import sys
