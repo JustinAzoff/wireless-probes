@@ -1,19 +1,20 @@
+iface=$(cat /etc/wireless_interface.conf)
+
 function get_var {
     k=$1
     cat /etc/wireless_probe.ini | grep $k | cut -d ' ' -f 3
 }
 
 function restart_wireless {
-    timeout 5 ifdown wlan0
-    ifconfig wlan0 0.0.0.0
-    ifconfig wlan0 down
+    timeout 5 ifdown $iface
+    ifconfig $iface 0.0.0.0
+    ifconfig $iface down
     pkill wpa_supplicant
-    rm /var/lib/dhcp/dhclient.wlan0.leases
-    nohup ifup wlan0 & 
+    rm /var/lib/dhcp/dhclient.${iface}.leases
+    nohup ifup $iface & 
 }
 
 function main {
-    iface=$(cat /etc/wireless_interface.conf)
     ping_host=$(get_var ping_host)
     if ping -qc 3 $ping_host >/dev/null; then
         #echo "$ping_host rechable!"
