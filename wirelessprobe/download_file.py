@@ -22,7 +22,7 @@ class FileDownloader:
         #implement code to calculate the percentage downloaded e.g
         now = time.time()
         if now - self.last > 1:
-            speed = self.blocks_seen * block_size
+            speed = self.blocks_seen * block_size / 1024 #speed in KB/s
             pct = 100*blocks/(total_size/block_size)
             logger.debug("dowload progress pct=%d, speed=%d", pct, speed)
             self.log.append(speed)
