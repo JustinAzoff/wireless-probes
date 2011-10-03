@@ -1,3 +1,4 @@
+#!/bin/bash
 iface=$(cat /etc/wireless_interface.conf)
 
 function get_var {
