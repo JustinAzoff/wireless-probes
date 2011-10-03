@@ -1,6 +1,7 @@
 from wirelessprobe import get_ip
 from wirelessprobe import wpa_cli
 from wirelessprobe import do_download
+from wirelessprobe import ping
 from wirelessprobe.util import make_stats
 
 import logging
@@ -27,11 +28,13 @@ def check_ip(interface):
         return dict(ok=ok, ip=ip)
     except IOError:
         return dict(ok=False, ip="")
-    
-def check_wireless(ssid, interface=None):
-    if not interface:
-        interface = open("/etc/wireless_interface.conf").read().strip()
 
+def check_ping(host, count):
+    stats = ping(host, count)
+    stats['ok'] = stats['loss'] < 4
+    return stats
+
+def check_wireless(ssid, interface, url, url_timeout, ping_host, ping_count):
     ap_stats = check_ssid(ssid, interface)
     print "AP stats ok=%(ok)s aps=%(aps)d min_signal=%(min)d avg_signal=%(avg)d max_signal=%(max)d" % ap_stats
 
@@ -41,7 +44,10 @@ def check_wireless(ssid, interface=None):
     ip_stats = check_ip(interface)
     print "IP address ok=%(ok)s ip=%(ip)s" % ip_stats
 
-    dl_stats = do_download("http://www.example.com/20m", 30)
+    ping_stats = check_ping(ping_host, ping_count)
+    print "PING stats ok=%(ok)s sent=%(sent)d received=%(received)d loss=%(loss)d min=%(min).2f avg=%(avg).2f max=%(max).2f" % ping_stats
+
+    dl_stats = do_download(url, url_timeout)
     if dl_stats['exception']:
         print "DL stats ok=%(ok)s exception='%(exception)s'" % dl_stats
     else:
@@ -50,5 +56,12 @@ def check_wireless(ssid, interface=None):
 
 def main():
     import sys
-    ssid = sys.argv[1]
-    check_wireless(ssid)
+    import ConfigParser
+    from wirelessprobe.parsers import maybe_int
+    cfile = sys.argv[1]
+    config = ConfigParser.ConfigParser()
+    config.read(cfile)
+    configuration = dict(config.items("probe"))
+    for k,v in configuration.items():
+        configuration[k] = maybe_int(v)
+    check_wireless(**configuration)
