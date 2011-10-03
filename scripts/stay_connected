@@ -4,12 +4,12 @@ function get_var {
 }
 
 function restart_wireless {
-    ifdown wlan0
+    timeout 5 ifdown wlan0
     ifconfig wlan0 0.0.0.0
     ifconfig wlan0 down
     pkill wpa_supplicant
     rm /var/lib/dhcp/dhclient.wlan0.leases
-    ifup wlan0
+    nohup ifup wlan0 & 
 }
 
 function main {
