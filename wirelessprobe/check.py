@@ -62,11 +62,12 @@ check_ping.alt_key = "error"
 def check_download(url, url_timeout, **kwargs):
     stats = do_download(url, url_timeout)
     stats["ok"] = not stats['timeout'] and not stats['exception']
+    stats['failed'] = not stats['ok']
     return stats
 
 check_download.format = "check=DL ok=%(ok)s elapsed=%(elapsed).2f timeout=%(timeout)s min_speed=%(min)d avg_speed=%(avg)d max_speed=%(max)d"
-check_download.alt_format = "check=DL ok=%(ok)s exception='%(exception)s'"
-check_download.alt_key = "exception"
+check_download.alt_format = "check=DL ok=%(ok)s timeout=%(timeout)s exception='%(exception)s'"
+check_download.alt_key = "failed"
 
 
 def check_wireless(**config):

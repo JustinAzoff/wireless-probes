@@ -56,6 +56,7 @@ def do_download(url, timeout):
         elapsed = d.download(url, timeout)
     except Timeout:
         hit_timeout=True
+        elapsed = timeout
     except Exception, e:
         exception=str(e)
 
