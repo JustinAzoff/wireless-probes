@@ -67,7 +67,7 @@ def check_wireless(**config):
 
     for func in check_ssid, check_wpa, check_ip, check_ping, check_download:
         stats = func(**config)
-        if getattr(func, 'alt_key', 'mooo') in stats:
+        if getattr(func, 'alt_key', 'mooo') in stats and stats[func.alt_key]:
             print func.alt_format % stats
         else:
             print func.format % stats
