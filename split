@@ -45,4 +45,6 @@ start() {
     ip route add $P2_NET dev $IF2 src $IP2
 
     ip route add default via $P2
+    ip rule add from $IP1 table T1
+    ip rule add from $IP2 table T2
 }
