@@ -51,15 +51,19 @@ def do_download(url, timeout):
     hit_timeout = False
     elapsed = None
     d = FileDownloader()
+    exception=None
     try :
         elapsed = d.download(url, timeout)
     except Timeout:
         hit_timeout=True
+    except Exception, e:
+        exception=str(e)
 
     stats = make_stats(d.log)
     stats["timeout"] = hit_timeout
-    stats["ok"] = not hit_timeout
+    stats["ok"] = not hit_timeout and not exception
     stats["elapsed"] = elapsed
+    stats['exception'] = exception
     return stats
 
 if __name__ == "__main__":

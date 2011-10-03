@@ -42,7 +42,10 @@ def check_wireless(ssid, interface=None):
     print "IP address ok=%(ok)s ip=%(ip)s" % ip_stats
 
     dl_stats = do_download("http://www.example.com/20m", 30)
-    print "DL stats ok=%(ok)s elapsed=%(elapsed).2f min_speed=%(min)d avg_speed=%(avg)d max_speed=%(max)d" % dl_stats
+    if dl_stats['exception']:
+        print "DL stats ok=%(ok)s exception='%(exception)s'" % dl_stats
+    else:
+        print "DL stats ok=%(ok)s elapsed=%(elapsed).2f timeout=%(timeout)s min_speed=%(min)d avg_speed=%(avg)d max_speed=%(max)d" % dl_stats
 
 
 def main():
