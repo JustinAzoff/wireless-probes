@@ -4,6 +4,7 @@ from wirelessprobe import do_download
 from wirelessprobe import ping
 from wirelessprobe.ping import PingError
 from wirelessprobe.util import make_stats
+import IPy
 
 import logging
 logger = logging.getLogger(__name__)
@@ -28,13 +29,16 @@ def check_wpa(ssid, interface, **kwargs):
 check_wpa.format = "check=WPA ok=%(ok)s wpa_state=%(wpa_state)s supplicant_state=%(Supplicant PAE state)s eap_state=%(EAP state)s"
 
 
-def check_ip(interface, **kwargs):
+def check_ip(interface, wireless_netblocks, **kwargs):
     try:
         ip = get_ip(interface)
-        ok = ip not in ("", "0.0.0.0")
-        return dict(ok=ok, ip=ip)
     except IOError:
         return dict(ok=False, ip="")
+
+    for net in wireless_netblocks.split(","):
+        if ip in IPy.IP(net):
+            return dict(ok=True, ip=ip)
+    return dict(ok=False, ip=ip)
 
 check_ip.format = "check=IP ok=%(ok)s ip=%(ip)s"
 

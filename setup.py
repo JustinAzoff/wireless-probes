@@ -12,6 +12,9 @@ setup(name="wirelessprobe",
         ]
     },
     scripts=glob('scripts/*'),
+    install_requires=[
+        "IPy",
+    ],
     #setup_requires=[
     #    "nose",
     #],
