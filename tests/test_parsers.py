@@ -65,3 +65,25 @@ def test_parse_scan_result():
     parsed = parsers.parse_scan_result(scan_result_out)
     assert parsed["00:1f:6d:b9:6c:42"]["signal"] == 204
     assert parsed["00:1f:6d:b9:6c:42"]["ssid"] == "UA_WPA"
+
+status_out = \
+"""bssid=00:17:df:ab:1f:71
+ssid=UA_WPA
+id=0
+pairwise_cipher=CCMP
+group_cipher=TKIP
+key_mgmt=WPA2/IEEE 802.1X/EAP
+wpa_state=COMPLETED
+ip_address=192.168.2.3
+Supplicant PAE state=AUTHENTICATED
+suppPortStatus=Authorized
+EAP state=SUCCESS
+selectedMethod=25 (EAP-PEAP)
+EAP TLS cipher=DHE-RSA-AES256-SHA
+EAP-PEAPv0 Phase2 method=MSCHAPV2
+"""
+
+def test_parse_status():
+    parsed = parsers.parse_status(status_out)
+    assert parsed['EAP state'] == 'SUCCESS'
+    assert parsed['wpa_state'] == 'COMPLETED'

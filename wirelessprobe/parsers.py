@@ -64,3 +64,11 @@ def parse_scan_result(txt):
         bssid, frequency, signal, flags, ssid = parts
         aps[bssid] = dict(bssid=bssid, frequency=frequency, signal=signal, flags=flags, ssid=ssid)
     return aps
+
+def parse_status(txt):
+    lines = txt.strip().split("\n")
+    ret = {}
+    for line in lines:
+        key, value = line.split("=")
+        ret[key] = value
+    return ret
