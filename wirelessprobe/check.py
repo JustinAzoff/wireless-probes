@@ -6,6 +6,7 @@ from wirelessprobe.ping import PingError
 from wirelessprobe.util import make_stats
 import IPy
 
+import datetime
 import logging
 logger = logging.getLogger(__name__)
 
@@ -69,12 +70,14 @@ check_download.alt_key = "exception"
 
 def check_wireless(**config):
 
+
     for func in check_ssid, check_wpa, check_ip, check_ping, check_download:
         stats = func(**config)
+        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         if getattr(func, 'alt_key', 'mooo') in stats and stats[func.alt_key]:
-            print func.alt_format % stats
+            print now, func.alt_format % stats
         else:
-            print func.format % stats
+            print now, func.format % stats
 
 def main():
     import sys
