@@ -12,8 +12,8 @@ setup(name="wirelessprobe",
         ]
     },
     scripts=glob('scripts/*'),
-    setup_requires=[
-        "nose",
-    ],
+    #setup_requires=[
+    #    "nose",
+    #],
     test_suite='nose.collector',
 )
