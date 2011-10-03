@@ -17,7 +17,7 @@ def check_ssid(ssid, interface, **kwargs):
     stats["ok"] = len(this_ssid) >= 1
     return stats
 
-check_ssid.format = "AP stats ok=%(ok)s aps=%(aps)d min_signal=%(min)d avg_signal=%(avg)d max_signal=%(max)d"
+check_ssid.format = "check=AP ok=%(ok)s aps=%(aps)d min_signal=%(min)d avg_signal=%(avg)d max_signal=%(max)d"
 
 
 def check_wpa(ssid, interface, **kwargs):
@@ -25,7 +25,7 @@ def check_wpa(ssid, interface, **kwargs):
     wpa_status["ok"] = wpa_status['wpa_state'] == "COMPLETED" and wpa_status['EAP state'] == "SUCCESS" and wpa_status['ssid'] == ssid
     return wpa_status
 
-check_wpa.format = "WPA stats ok=%(ok)s wpa_state=%(wpa_state)s supplicant_state=%(Supplicant PAE state)s eap_state=%(EAP state)s"
+check_wpa.format = "check=WPA ok=%(ok)s wpa_state=%(wpa_state)s supplicant_state=%(Supplicant PAE state)s eap_state=%(EAP state)s"
 
 
 def check_ip(interface, **kwargs):
@@ -36,7 +36,7 @@ def check_ip(interface, **kwargs):
     except IOError:
         return dict(ok=False, ip="")
 
-check_ip.format = "IP address ok=%(ok)s ip=%(ip)s"
+check_ip.format = "check=IP ok=%(ok)s ip=%(ip)s"
 
 
 def check_ping(ping_host, ping_count, **kwargs):
@@ -48,8 +48,8 @@ def check_ping(ping_host, ping_count, **kwargs):
     stats['ok'] = stats['loss'] < 4
     return stats
 
-check_ping.format = "PING stats ok=%(ok)s sent=%(sent)d received=%(received)d loss=%(loss)d min=%(min).2f avg=%(avg).2f max=%(max).2f"
-check_ping.alt_format = "PING stats ok=%(ok)s error=%(error)s"
+check_ping.format = "check=PING ok=%(ok)s sent=%(sent)d received=%(received)d loss=%(loss)d min=%(min).2f avg=%(avg).2f max=%(max).2f"
+check_ping.alt_format = "check=PING ok=%(ok)s error=%(error)s"
 check_ping.alt_key = "error"
 
 
@@ -58,8 +58,8 @@ def check_download(url, url_timeout, **kwargs):
     stats["ok"] = not stats['timeout'] and not stats['exception']
     return stats
 
-check_download.format = "DL stats ok=%(ok)s elapsed=%(elapsed).2f timeout=%(timeout)s min_speed=%(min)d avg_speed=%(avg)d max_speed=%(max)d"
-check_download.alt_format = "DL stats ok=%(ok)s exception='%(exception)s'"
+check_download.format = "check=DL ok=%(ok)s elapsed=%(elapsed).2f timeout=%(timeout)s min_speed=%(min)d avg_speed=%(avg)d max_speed=%(max)d"
+check_download.alt_format = "check=DL ok=%(ok)s exception='%(exception)s'"
 check_download.alt_key = "exception"
 
 
