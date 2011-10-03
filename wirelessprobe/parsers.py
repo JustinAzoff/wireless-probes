@@ -1,3 +1,5 @@
+import re
+
 def clean(s):
     """Strip off any dots and convert to an integer if possible"""
     x = s.strip(".")
@@ -43,8 +45,13 @@ def parse_download(txt):
     return {'time': t, 'kilobytes': kilobytes}
 
 def maybe_int(s):
+    if '.' in s:
+        func = float
+    else:
+        func = int
+
     try:
-        return int(s)
+        return func(s)
     except ValueError:
         return s
 
@@ -72,3 +79,25 @@ def parse_status(txt):
         key, value = line.split("=")
         ret[key] = value
     return ret
+
+def parse_ping(txt):
+    lines = txt.strip().split("\n")
+    transmitted_line = [x for x in lines if 'transmitted' in x][0]
+    stats_line = [x for x in lines if 'min/avg' in x][0]
+
+    #5 packets transmitted, 5 received, 0% packet loss, time 4006ms
+    stats = re.match("(?P<sent>\d+) packets transmitted, (?P<received>\d+) received, (?P<loss>\d+)% packet loss,", transmitted_line).groupdict()
+
+    #rtt min/avg/max/mdev = 9.363/11.902/15.020/2.061 ms
+    parts = re.split("[ /]", stats_line)
+    stats['min'] = parts[-5]
+    stats['avg'] = parts[-4]
+    stats['max'] = parts[-3]
+    stats['mdev'] = parts[-2]
+
+
+    for k,v in stats.items():
+        stats[k] = maybe_int(v)
+
+
+    return stats

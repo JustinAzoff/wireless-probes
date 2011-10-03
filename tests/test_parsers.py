@@ -87,3 +87,27 @@ def test_parse_status():
     parsed = parsers.parse_status(status_out)
     assert parsed['EAP state'] == 'SUCCESS'
     assert parsed['wpa_state'] == 'COMPLETED'
+
+ping_out = \
+"""(test)root@probe1:/tmp# ping -c 5 192.168.1.1
+PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
+64 bytes from 192.168.1.1: icmp_req=1 ttl=255 time=1.93 ms
+64 bytes from 192.168.1.1: icmp_req=2 ttl=255 time=1.61 ms
+64 bytes from 192.168.1.1: icmp_req=3 ttl=255 time=2.21 ms
+64 bytes from 192.168.1.1: icmp_req=4 ttl=255 time=2.84 ms
+64 bytes from 192.168.1.1: icmp_req=5 ttl=255 time=5.34 ms
+
+--- 192.168.1.1 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4006ms
+rtt min/avg/max/mdev = 1.617/2.790/5.346/1.341 ms
+"""
+
+def test_parse_ping():
+    parsed = parsers.parse_ping(ping_out)
+    assert parsed['sent'] == 5
+    assert parsed['received'] == 5
+    assert parsed['loss'] == 0
+    assert parsed['min'] == 1.617
+    assert parsed['avg'] == 2.790
+    assert parsed['max'] == 5.346
+    assert parsed['mdev'] == 1.341
