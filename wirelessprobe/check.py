@@ -73,9 +73,9 @@ check_download.alt_key = "failed"
 def check_wireless(**config):
 
 
-    for func in check_ssid, check_wpa, check_ip, check_ping, check_download:
-        stats = func(**config)
+    for func in check_ssid, check_wpa, check_ip, check_download, check_ping:
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        stats = func(**config)
         if getattr(func, 'alt_key', 'mooo') in stats and stats[func.alt_key]:
             print now, func.alt_format % stats
         else:
