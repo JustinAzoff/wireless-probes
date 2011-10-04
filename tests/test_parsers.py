@@ -99,7 +99,7 @@ PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
 
 --- 192.168.1.1 ping statistics ---
 5 packets transmitted, 5 received, 0% packet loss, time 4006ms
-rtt min/avg/max/mdev = 1.617/2.790/5.346/1.341 ms
+rtt min/avg/max/mdev = 1.617/2.790/5.346/1.341 ms, pipe 2
 """
 
 def test_parse_ping():
