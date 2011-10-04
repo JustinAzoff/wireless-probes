@@ -16,7 +16,7 @@ restart_wireless () {
     ifup $iface &
     sleep 2
     for x in `seq 15`;do
-        if ping -qc 2 $ping_host >/dev/null; then
+        if ping -qc 2 $ping_host &>/dev/null; then
             exit 0
         fi
         sleep 1
@@ -25,7 +25,7 @@ restart_wireless () {
 
 main () {
     ping_host=$(get_var ping_host)
-    if ping -qc 3 $ping_host >/dev/null; then
+    if ping -qc 3 $ping_host &>/dev/null; then
         #echo "$ping_host rechable!"
         exit 0
     fi
