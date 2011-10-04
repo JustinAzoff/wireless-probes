@@ -88,12 +88,12 @@ def parse_ping(txt):
     #5 packets transmitted, 5 received, 0% packet loss, time 4006ms
     stats = re.match("(?P<sent>\d+) packets transmitted, (?P<received>\d+) received, (?P<loss>\d+)% packet loss,", transmitted_line).groupdict()
 
-    #rtt min/avg/max/mdev = 9.363/11.902/15.020/2.061 ms
-    parts = re.split("[ /]", stats_line)
-    stats['min'] = parts[-5]
-    stats['avg'] = parts[-4]
-    stats['max'] = parts[-3]
-    stats['mdev'] = parts[-2]
+    #rtt min/avg/max/mdev = 9.363/11.902/15.020/2.061 ms, pipe 2
+    parts = re.split("[ /]", stats_line.split(" = ")[1])
+    stats['min'] = parts[0]
+    stats['avg'] = parts[1]
+    stats['max'] = parts[2]
+    stats['mdev'] = parts[3]
 
 
     for k,v in stats.items():
