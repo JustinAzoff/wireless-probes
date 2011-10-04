@@ -43,12 +43,13 @@ class FileDownloader:
 
         start = time.time()
         self.last = start
-        (file, headers) = urllib.urlretrieve(site, "/dev/null", self.progress_callback)
-        end = time.time()
-
-        signal.signal(signal.SIGALRM, old)
-        signal.alarm(0)
-        return end - start
+        try :
+            (file, headers) = urllib.urlretrieve(site, "/dev/null", self.progress_callback)
+            end = time.time()
+            return end - start
+        finally:
+            signal.signal(signal.SIGALRM, old)
+            signal.alarm(0)
 
 def do_download(url, timeout):
     hit_timeout = False
