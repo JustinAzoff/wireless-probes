@@ -13,7 +13,14 @@ restart_wireless () {
     pkill wpa_supplicant
     rm /var/lib/dhcp/dhclient.${iface}.leases
     sleep 2
-    ifup $iface
+    ifup $iface &
+    sleep 2
+    for x in `seq 15`;do
+        if ping -qc 2 $ping_host >/dev/null; then
+            exit 0
+        fi
+        sleep 1
+    done
 }
 
 main () {
