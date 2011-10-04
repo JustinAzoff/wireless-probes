@@ -1,7 +1,8 @@
 from wirelessprobe import get_ip
 from wirelessprobe import wpa_cli
 from wirelessprobe import do_download
-from wirelessprobe import ping
+from wirelessprobe import ping, is_alive
+from wirelessprobe import connect, disconnect
 from wirelessprobe.ping import PingError
 from wirelessprobe.util import make_stats
 import IPy
@@ -22,6 +23,20 @@ def check_ssid(ssid, interface, **kwargs):
 
 check_ssid.format = "check=AP ok=%(ok)s aps=%(aps)d min_signal=%(min)d avg_signal=%(avg)d max_signal=%(max)d"
 
+
+def check_connect(interface, ping_host, **kwargs):
+    if not is_alive(ping_host, 2):
+        disconnect(interface)
+        stats = connect(interface)
+        stats["ok"] = stats["elapsed"] < 20
+    else:
+        stats = dict(already=True)
+    return stats
+
+check_connect.format = "check=Connect ok=%(ok)s elapsed=%(elapsed)d"
+check_connect.alt_format = "check=Connect ok=%(ok)s already_connected=True"
+check_connect.alt_key = "already"
+    
 
 def check_wpa(ssid, interface, **kwargs):
     wpa_status = wpa_cli.status(interface)
@@ -73,7 +88,7 @@ check_download.alt_key = "failed"
 def check_wireless(**config):
 
 
-    for func in check_ssid, check_wpa, check_ip, check_download, check_ping:
+    for func in check_ssid, check_connect, check_wpa, check_ip, check_download, check_ping:
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         stats = func(**config)
         if getattr(func, 'alt_key', 'mooo') in stats and stats[func.alt_key]:

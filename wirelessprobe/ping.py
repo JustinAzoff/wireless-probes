@@ -1,6 +1,7 @@
 from subprocess import Popen, PIPE
 from wirelessprobe import parsers
 
+import time
 import logging
 logger = logging.getLogger(__name__)
 
@@ -14,9 +15,13 @@ def ping(address, count):
     except:
         raise PingError
 
-def is_alive(address, count=1):
-    ret = ping(address, count)
-    try :
-        return ret['received'] > 0
-    except PingError:
-        return False
+def is_alive(address, retries=3):
+    for _ in range(retries):
+        try :
+            ret = ping(address, 1)
+            if ret['received'] > 0:
+                return True
+        except PingError:
+            continue
+        time.sleep(1)
+    return False
