@@ -32,7 +32,7 @@ class FileDownloader:
         else:
             self.blocks_seen +=1
 
-        self.kbytes_seen += self.blocks_seen * block_size / 1024
+        self.kbytes_seen = blocks * block_size / 1024
 
     def handle_timeout(self, signum, frame):
         raise Timeout()
@@ -69,6 +69,8 @@ def do_download(url, timeout):
     stats["elapsed"] = elapsed
     stats['exception'] = exception
     stats['kbytes'] = d.kbytes_seen
+    sys.stderr.write(repr(stats) + "\n")
+    stats['avg'] = d.kbytes_seen/elapsed #fix
     return stats
 
 if __name__ == "__main__":
