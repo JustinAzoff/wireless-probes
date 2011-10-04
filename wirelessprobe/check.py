@@ -66,7 +66,7 @@ def check_download(url, url_timeout, **kwargs):
     return stats
 
 check_download.format = "check=DL ok=%(ok)s elapsed=%(elapsed).2f timeout=%(timeout)s min_speed=%(min)d avg_speed=%(avg)d max_speed=%(max)d"
-check_download.alt_format = "check=DL ok=%(ok)s timeout=%(timeout)s exception='%(exception)s'"
+check_download.alt_format = "check=DL ok=%(ok)s timeout=%(timeout)s kbytes=%(kbytes)d exception='%(exception)s'"
 check_download.alt_key = "failed"
 
 

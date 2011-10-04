@@ -14,6 +14,7 @@ class FileDownloader:
     def __init__(self):
         self.log = []
         self.blocks_seen = 0
+        self.kbytes_seen = 0
 
     def progress_callback(self, blocks, block_size, total_size):
         #blocks->data downloaded so far (first argument of your callback)
@@ -26,10 +27,12 @@ class FileDownloader:
             pct = 100*blocks/(total_size/block_size)
             logger.debug("dowload progress pct=%d, speed=%d", pct, speed)
             self.log.append(speed)
-            self.blocks_seen = 0
+            self.blocks_seen = 1
             self.last = now
         else:
             self.blocks_seen +=1
+
+        self.kbytes_seen += self.blocks_seen * block_size / 1024
 
     def handle_timeout(self, signum, frame):
         raise Timeout()
@@ -64,6 +67,7 @@ def do_download(url, timeout):
     stats["timeout"] = hit_timeout
     stats["elapsed"] = elapsed
     stats['exception'] = exception
+    stats['kbytes'] = d.kbytes_seen
     return stats
 
 if __name__ == "__main__":
