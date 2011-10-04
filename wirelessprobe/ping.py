@@ -13,3 +13,10 @@ def ping(address, count):
         return parsers.parse_ping(output)
     except:
         raise PingError
+
+def is_alive(address, count=1):
+    ret = ping(address, count)
+    try :
+        return ret['received'] > 0
+    except PingError:
+        return False
