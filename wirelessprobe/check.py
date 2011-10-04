@@ -30,7 +30,7 @@ def check_connect(interface, ping_host, **kwargs):
         stats = connect(interface)
         stats["ok"] = stats["elapsed"] < 20
     else:
-        stats = dict(already=True)
+        stats = dict(ok=True, already=True)
     return stats
 
 check_connect.format = "check=Connect ok=%(ok)s elapsed=%(elapsed)d"
@@ -88,7 +88,8 @@ check_download.alt_key = "failed"
 def check_wireless(**config):
 
 
-    for func in check_ssid, check_connect, check_wpa, check_ip, check_download, check_ping:
+    for func in check_connect, check_ssid, check_wpa, check_ip, check_download, check_ping:
+        #sys.stderr.write(repr(func) + "\n")
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         stats = func(**config)
         if getattr(func, 'alt_key', 'mooo') in stats and stats[func.alt_key]:
