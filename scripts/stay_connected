@@ -11,6 +11,7 @@ restart_wireless () {
     ifconfig $iface 0.0.0.0
     ifconfig $iface down
     pkill wpa_supplicant
+    pkill dhclient
     rm /var/lib/dhcp/dhclient.${iface}.leases
     sleep 2
     ifup $iface &
