@@ -28,7 +28,7 @@ def check_connect(interface, ping_host, **kwargs):
     if not is_alive(ping_host, 2):
         disconnect(interface)
         stats = connect(interface)
-        stats["ok"] = stats["elapsed"] < 20
+        stats["ok"] = stats["elapsed"] < 30
     else:
         stats = dict(ok=True, already=True)
     return stats
