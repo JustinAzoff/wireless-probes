@@ -43,7 +43,7 @@ def check_wpa(ssid, interface, **kwargs):
     wpa_status["ok"] = wpa_status['wpa_state'] == "COMPLETED" and wpa_status['EAP state'] == "SUCCESS" and wpa_status['ssid'] == ssid
     return wpa_status
 
-check_wpa.format = "check=WPA ok=%(ok)s wpa_state=%(wpa_state)s supplicant_state=%(Supplicant PAE state)s eap_state=%(EAP state)s"
+check_wpa.format = "check=WPA ok=%(ok)s wpa_state=%(wpa_state)s supplicant_state=%(Supplicant PAE state)s eap_state=%(EAP state)s bssid=%(bssid)s"
 
 
 def check_ip(interface, wireless_netblocks, **kwargs):
