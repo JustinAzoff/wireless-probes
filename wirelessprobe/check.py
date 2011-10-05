@@ -28,12 +28,12 @@ def check_connect(interface, ping_host, **kwargs):
     if not is_alive(ping_host, 2):
         disconnect(interface)
         stats = connect(interface)
-        stats["ok"] = stats["elapsed"] < 30
+        stats["ok"] = stats["connect_time"] < 30
     else:
         stats = dict(ok=True, already=True)
     return stats
 
-check_connect.format = "check=Connect ok=%(ok)s elapsed=%(elapsed)d"
+check_connect.format = "check=Connect ok=%(ok)s connect_time=%(connect_time)d"
 check_connect.alt_format = "check=Connect ok=%(ok)s already_connected=True"
 check_connect.alt_key = "already"
     
@@ -69,7 +69,7 @@ def check_ping(ping_host, ping_count, **kwargs):
     stats['ok'] = stats['loss'] < 4
     return stats
 
-check_ping.format = "check=PING ok=%(ok)s sent=%(sent)d received=%(received)d loss=%(loss)d min=%(min).2f avg=%(avg).2f max=%(max).2f"
+check_ping.format = "check=PING ok=%(ok)s sent=%(sent)d received=%(received)d packet_loss=%(loss)d min_rtt=%(min).2f avg_rtt=%(avg).2f max_rtt=%(max).2f"
 check_ping.alt_format = "check=PING ok=%(ok)s error=%(error)s"
 check_ping.alt_key = "error"
 
@@ -80,7 +80,7 @@ def check_download(url, url_timeout, **kwargs):
     stats['failed'] = not stats['ok']
     return stats
 
-check_download.format = "check=DL ok=%(ok)s elapsed=%(elapsed).2f timeout=%(timeout)s min_speed=%(min)d avg_speed=%(avg)d max_speed=%(max)d"
+check_download.format = "check=DL ok=%(ok)s download_time=%(elapsed).2f timeout=%(timeout)s min_speed=%(min)d avg_speed=%(avg)d max_speed=%(max)d"
 check_download.alt_format = "check=DL ok=%(ok)s timeout=%(timeout)s kbytes=%(kbytes)d exception='%(exception)s'"
 check_download.alt_key = "failed"
 

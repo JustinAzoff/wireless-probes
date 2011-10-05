@@ -28,5 +28,5 @@ def connect(interface):
     output = run(["ifup", interface])
     end = time.time()
 
-    stats['elapsed'] = end - start
+    stats['connect_time'] = end - start
     return stats
