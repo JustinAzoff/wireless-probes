@@ -69,7 +69,6 @@ def do_download(url, timeout):
     stats["elapsed"] = elapsed
     stats['exception'] = exception
     stats['kbytes'] = d.kbytes_seen
-    sys.stderr.write(repr(stats) + "\n")
     stats['avg'] = d.kbytes_seen/elapsed #fix
     return stats
 
