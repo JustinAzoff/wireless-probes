@@ -7,6 +7,7 @@ from wirelessprobe.ping import PingError
 from wirelessprobe.util import make_stats
 import IPy
 
+import time
 import datetime
 import logging
 import sys
@@ -86,9 +87,8 @@ check_download.alt_key = "failed"
 
 
 def check_wireless(**config):
-
-
     for func in check_connect, check_ssid, check_wpa, check_ip, check_download, check_ping:
+        time.sleep(2)
         #sys.stderr.write(repr(func) + "\n")
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         stats = func(**config)
