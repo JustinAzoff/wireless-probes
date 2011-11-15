@@ -1,1 +1,0 @@
-reboot takes about 20 seconds

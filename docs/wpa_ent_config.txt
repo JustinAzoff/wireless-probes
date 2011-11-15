@@ -1,9 +1,0 @@
-config wifi-iface
-    option device         "ath0"
-    option network        lan
-    option ssid           OpenWrt
-    option eap_type       peap
-    option ca_cert        "/etc/config/certs/ca.crt"
-    option auth           MSCHAPV2
-    option identity       username
-    option password       password
