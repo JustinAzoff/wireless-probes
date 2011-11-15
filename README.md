@@ -17,30 +17,30 @@ It outputs something like this:
 It runs the following tests:
 
 Connect
-~~~~~~~
+-------
 
 Either a no-op, or times how long it takes for 'ifup wlan0' to run.
 
 AP
-~~
+--
 
 Logs number of access points visible and signal strength
 
 WPA
-~~~
+---
 
 Logs the status of wpa_supplicant
 
 IP
-~~
+--
 
 Logs the IP Address received from DHCP, verifies that it is in the expectect subnet.
 
 DL
-~~
+--
 
 Downloads a file over http
 
 PING
-~~~~
+----
 Pings an address
