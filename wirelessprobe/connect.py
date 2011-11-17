@@ -18,7 +18,10 @@ def disconnect(interface):
     run(["pkill", "wpa_supplicant"])
     run(["pkill", "dhclient"])
 
-    os.unlink("/var/lib/dhcp/dhclient.%s.leases" % interface)
+    try :
+        os.unlink("/var/lib/dhcp/dhclient.%s.leases" % interface)
+    except OSError:
+        pass
 
 def connect(interface):
     logger.debug("Connecting to %s", interface)
