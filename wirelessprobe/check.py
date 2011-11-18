@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 class Checker:
     def __init__(self, configuration):
         self.disconnect_before_checks = False
+        self.connect_offset = 0
         self.config = configuration
         for k,v in configuration.items():
             setattr(self, k, v)
@@ -37,6 +38,7 @@ class Checker:
         if not is_alive(self.ping_host, 2):
             disconnect(self.interface)
             stats = connect(self.interface)
+            stats["connect_time"] -= self.connect_offset # account for firmware delays
             stats["ok"] = stats["connect_time"] < 30
         else:
             stats = dict(ok=True, already=True)
