@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 class Checker:
     def __init__(self, configuration):
+        self.disconnect_before_checks = False
         self.config = configuration
         for k,v in configuration.items():
             setattr(self, k, v)
@@ -100,6 +101,8 @@ class Checker:
     ]
 
     def run_checks(self):
+        if self.disconnect_before_checks:
+            disconnect(self.interface)
         for func in self.all_checks:
             time.sleep(2)
             now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
