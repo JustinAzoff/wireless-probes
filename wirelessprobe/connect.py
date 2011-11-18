@@ -13,8 +13,8 @@ def run(cmd):
 
 def disconnect(interface):
     run(["ifdown", interface])
-    run(["ifconfig", interface, "0.0.0.0"])
-    run(["ifconfig", interface, "down"])
+    #run(["ifconfig", interface, "0.0.0.0"])
+    #run(["ifconfig", interface, "down"])
     run(["pkill", "wpa_supplicant"])
     run(["pkill", "dhclient"])
 
