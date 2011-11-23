@@ -68,6 +68,11 @@ class Checker:
 
     check_ip.format = "check=IP ok=%(ok)s ip=%(ip)s"
 
+    def check_connectivity(self):
+        is_connected = is_alive(self.ping_host, 3)
+        return dict(ok=is_connected)
+    check_connectivity.format = "check=CONN ok=%(ok)s"
+        
 
     def check_ping(self):
         try :
@@ -98,6 +103,7 @@ class Checker:
         check_ssid,
         check_wpa,
         check_ip,
+        check_connectivity,
         check_download,
         check_ping,
     ]

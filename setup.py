@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from glob import glob
 
 setup(name="wirelessprobe",
-    version="1.2",
+    version="1.3",
     author="Justin Azoff",
     author_email="JAzoff@uamail.albany.edu",
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
