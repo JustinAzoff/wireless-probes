@@ -33,6 +33,7 @@ class Checker:
         return stats
 
     check_ssid.format = "check=AP ok=%(ok)s aps=%(aps)d min_signal=%(min)d avg_signal=%(avg)d max_signal=%(max)d"
+    check_ssid.name = "AP"
 
     def check_connect(self):
         if not is_alive(self.ping_host, 2):
@@ -47,6 +48,7 @@ class Checker:
     check_connect.format = "check=Connect ok=%(ok)s connect_time=%(connect_time)d"
     check_connect.alt_format = "check=Connect ok=%(ok)s already_connected=True"
     check_connect.alt_key = "already"
+    check_connect.name = "Connect"
     
     def check_wpa(self):
         wpa_status = wpa_cli.status(self.interface)
@@ -54,6 +56,7 @@ class Checker:
         return wpa_status
 
     check_wpa.format = "check=WPA ok=%(ok)s wpa_state=%(wpa_state)s supplicant_state=%(Supplicant PAE state)s eap_state=%(EAP state)s bssid=%(bssid)s"
+    check_wpa.name = "WPA"
 
     def check_ip(self):
         try:
@@ -67,12 +70,13 @@ class Checker:
         return dict(ok=False, ip=ip)
 
     check_ip.format = "check=IP ok=%(ok)s ip=%(ip)s"
+    check_ip.name = "IP"
 
     def check_connectivity(self):
         is_connected = is_alive(self.ping_host, 3)
         return dict(ok=is_connected)
     check_connectivity.format = "check=CONN ok=%(ok)s"
-        
+    check_connectivity.name = "CONN"
 
     def check_ping(self):
         try :
@@ -86,6 +90,7 @@ class Checker:
     check_ping.format = "check=PING ok=%(ok)s sent=%(sent)d received=%(received)d packet_loss=%(loss)d min_rtt=%(min).2f avg_rtt=%(avg).2f max_rtt=%(max).2f"
     check_ping.alt_format = "check=PING ok=%(ok)s error=%(error)s"
     check_ping.alt_key = "error"
+    check_ping.name = "PING"
 
 
     def check_download(self):
@@ -97,6 +102,7 @@ class Checker:
     check_download.format = "check=DL ok=%(ok)s download_time=%(elapsed).2f timeout=%(timeout)s min_speed=%(min)d avg_speed=%(avg)d max_speed=%(max)d"
     check_download.alt_format = "check=DL ok=%(ok)s timeout=%(timeout)s kbytes=%(kbytes)d exception='%(exception)s'"
     check_download.alt_key = "failed"
+    check_download.name = "DL"
 
     all_checks = [
         check_connect,
@@ -114,11 +120,16 @@ class Checker:
         for func in self.all_checks:
             time.sleep(2)
             now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            stats = func(self)
-            if getattr(func, 'alt_key', 'mooo') in stats and stats[func.alt_key]:
-                print now, func.alt_format % stats
-            else:
-                print now, func.format % stats
+            try :
+                stats = func(self)
+                if getattr(func, 'alt_key', 'mooo') in stats and stats[func.alt_key]:
+                    print now, func.alt_format % stats
+                else:
+                    print now, func.format % stats
+            except Exception, e:
+                import traceback
+                traceback.print_exc(file=sys.stderr)
+                print now, "check=%s ok=False exception='%s'" % (func.name, e)
             sys.stdout.flush()
 
     @classmethod

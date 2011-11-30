@@ -71,6 +71,10 @@ def do_download(url, timeout):
     stats['kbytes'] = d.kbytes_seen
     if elapsed:
         stats['avg'] = d.kbytes_seen/elapsed #fix
+
+    #if the download took less than 1 second, there are no stats
+    if stats['min'] is None:
+        stats['min'] = stats['max'] = stats['avg']
     return stats
 
 if __name__ == "__main__":
