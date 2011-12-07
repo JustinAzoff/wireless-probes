@@ -1,0 +1,20 @@
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet static
+    address 192.168.2.2
+    netmask 255.255.255.0
+    post-up route add -host 192.168.1.2     gw 192.168.2.1 #management servers
+    post-up route add -host 192.168.1.3     gw 192.168.2.1 #dns servers
+    #etc
+
+    up ethtool -s eth0 wol g  #enable wake on lan
+
+iface wlan0 inet dhcp
+    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+    #make DNS lookups go over wireless once the link is UP
+    post-up  route del -host 192.168.1.3     gw 192.168.2.1 #dns servers
+
+    pre-down route add -host 192.168.1.3     gw 192.168.2.1 #dns servers
