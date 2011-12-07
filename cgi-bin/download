@@ -1,6 +1,0 @@
-#!/bin/sh
-
-echo Content-type: text-plain
-echo
-
-time wget -O/dev/null http://www.example.com/4m 2>&1
